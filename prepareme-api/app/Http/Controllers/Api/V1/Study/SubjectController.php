@@ -39,8 +39,15 @@ class SubjectController extends Controller
             ->roots()
             ->published()
             ->ordered()
-            ->with(['publishedChildren.studyGuides' => fn($q) => $q->published(), 'studyGuides' => fn($q) => $q->published()])
-            ->withCount(['studyGuides' => fn($q) => $q->published(), 'publicQuestions' => fn($q) => $q->published()])
+            ->with([
+                'chapter',
+                'publishedChildren.studyGuides' => fn($q) => $q->published(),
+                'studyGuides' => fn($q) => $q->published()
+            ])
+            ->withCount([
+                'studyGuides' => fn($q) => $q->published(),
+                'publicQuestions' => fn($q) => $q->published()
+            ])
             ->get();
 
         return response()->json([

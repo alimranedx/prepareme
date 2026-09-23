@@ -46,7 +46,12 @@ class StudyGuideController extends Controller
                     $q->where('slug', $identifier);
                 }
             })
-            ->with(['topic.subject', 'sections'])
+            ->with([
+                'topic.subject',
+                'topic.chapter',
+                'topic.studyGuides' => fn($q) => $q->published()->orderBy('id', 'asc'),
+                'sections',
+            ])
             ->firstOrFail();
 
         $this->authorize('view', $guide);

@@ -16,10 +16,12 @@ class Topic extends Model
 
     protected $fillable = [
         'subject_id',
+        'chapter_id',
         'parent_id',
         'name',
         'slug',
         'description',
+        'is_high_yield',
         'status',
         'sort_order',
         'created_by',
@@ -30,6 +32,7 @@ class Topic extends Model
     {
         return [
             'status' => ContentStatus::class,
+            'is_high_yield' => 'boolean',
             'sort_order' => 'integer',
         ];
     }
@@ -53,6 +56,11 @@ class Topic extends Model
         return $query->whereNull('parent_id');
     }
 
+    public function scopeHighYield($query)
+    {
+        return $query->where('is_high_yield', true);
+    }
+
     public function scopeOrdered($query)
     {
         return $query->orderBy('sort_order', 'asc')->orderBy('name', 'asc');
@@ -61,6 +69,18 @@ class Topic extends Model
     public function subject(): BelongsTo
     {
         return $this->belongsTo(Subject::class);
+    }
+
+    public function chapter(): BelongsTo
+    {
+        return $this->belongsTo(Chapter::class);
+    }
+
+    public function exams(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Exam::class, 'exam_topics')
+            ->withPivot(['importance_rating', 'notes'])
+            ->withTimestamps();
     }
 
     public function parent(): BelongsTo

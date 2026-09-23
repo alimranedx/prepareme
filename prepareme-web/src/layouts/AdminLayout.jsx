@@ -1,6 +1,7 @@
 import React from 'react';
 import { Outlet, NavLink, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import ScrollToTopButton from '../components/common/ScrollToTopButton';
 
 const AdminLayout = () => {
   const { user, logout } = useAuth();
@@ -85,6 +86,7 @@ const AdminLayout = () => {
           <Outlet />
         </div>
       </div>
+      <ScrollToTopButton />
     </div>
   );
 };

@@ -14,6 +14,13 @@ import SubjectsPage from './pages/public/SubjectsPage';
 import TopicListingPage from './pages/public/TopicListingPage';
 import StudyGuideDetailPage from './pages/public/StudyGuideDetailPage';
 import PublicQuestionsPage from './pages/public/PublicQuestionsPage';
+import ExamsHubPage from './pages/public/ExamsHubPage';
+import ExamSyllabusDetailPage from './pages/public/ExamSyllabusDetailPage';
+import PreviousQuestionsPage from './pages/public/PreviousQuestionsPage';
+import ModelTestsListingPage from './pages/public/ModelTestsListingPage';
+import ModelTestSimulatorPage from './pages/public/ModelTestSimulatorPage';
+import ModelTestResultPage from './pages/public/ModelTestResultPage';
+import MistakeRevisionPage from './pages/public/MistakeRevisionPage';
 
 // Auth Pages
 import LoginPage from './pages/auth/LoginPage';
@@ -63,9 +70,24 @@ function App() {
         {/* Unrestricted Public Routes */}
         <Route path="/" element={<HomePage />} />
         <Route path="/subjects" element={<SubjectsPage />} />
-        <Route path="/subjects/:subjectSlug/topics" element={<TopicListingPage />} />
+        <Route path="/subjects/:slug" element={<TopicListingPage />} />
+        <Route path="/subjects/:slug/topics" element={<TopicListingPage />} />
         <Route path="/study-guides/:id" element={<StudyGuideDetailPage />} />
+        <Route path="/study-guides/view/:slug" element={<StudyGuideDetailPage />} />
         <Route path="/public-questions" element={<PublicQuestionsPage />} />
+
+        {/* Exams & Syllabus Hub */}
+        <Route path="/exams" element={<ExamsHubPage />} />
+        <Route path="/exams/:slug" element={<ExamSyllabusDetailPage />} />
+
+        {/* Question Bank & Previous Years Archives */}
+        <Route path="/previous-questions" element={<PreviousQuestionsPage />} />
+
+        {/* Model Test & Exam Simulator */}
+        <Route path="/model-tests" element={<ModelTestsListingPage />} />
+        <Route path="/model-tests/:slug/take" element={<ModelTestSimulatorPage />} />
+        <Route path="/model-tests/attempts/:id/result" element={<ModelTestResultPage />} />
+        <Route path="/model-tests/attempts/:id/mistakes" element={<MistakeRevisionPage />} />
 
         {/* Guest Only Routes (Login, Register, Password Reset) */}
         <Route element={<GuestRoute />}>

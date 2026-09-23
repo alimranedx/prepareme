@@ -37,12 +37,22 @@ const Navbar = () => {
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item">
               <NavLink className="nav-link bangla-text" to="/subjects">
-                <i className="bi bi-grid me-1"></i> বিষয়সমূহ
+                <i className="bi bi-book-half me-1"></i> বিষয় ও অধ্যায়
               </NavLink>
             </li>
             <li className="nav-item">
-              <NavLink className="nav-link bangla-text" to="/public-questions">
-                <i className="bi bi-patch-question me-1"></i> প্রশ্নব্যাংক
+              <NavLink className="nav-link bangla-text" to="/exams">
+                <i className="bi bi-mortarboard me-1"></i> চাকরি সিলেবাস
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink className="nav-link bangla-text" to="/previous-questions">
+                <i className="bi bi-archive me-1"></i> বিগত প্রশ্নব্যাংক
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink className="nav-link bangla-text" to="/model-tests">
+                <i className="bi bi-stopwatch me-1"></i> মডেল টেস্ট
               </NavLink>
             </li>
 

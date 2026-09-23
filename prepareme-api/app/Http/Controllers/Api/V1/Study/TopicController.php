@@ -30,4 +30,32 @@ class TopicController extends Controller
             'data' => new TopicResource($topic),
         ]);
     }
+
+    public function previousQuestions(string $topicIdentifier): JsonResponse
+    {
+        $topic = Topic::published()
+            ->where(function ($q) use ($topicIdentifier) {
+                if (is_numeric($topicIdentifier)) {
+                    $q->where('id', $topicIdentifier);
+                } else {
+                    $q->where('slug', $topicIdentifier);
+                }
+            })
+            ->firstOrFail();
+
+        $questions = $topic->publicQuestions()
+            ->published()
+            ->with(['source.exam', 'exams', 'optionsList', 'chapter'])
+            ->latest('id')
+            ->get();
+
+        return response()->json([
+            'topic' => [
+                'id' => $topic->id,
+                'name' => $topic->name,
+                'slug' => $topic->slug,
+            ],
+            'data' => \App\Http\Resources\PublicQuestionResource::collection($questions),
+        ]);
+    }
 }

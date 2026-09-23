@@ -86,22 +86,44 @@ prepareme.com/
 ### Prerequisites
 * PHP 8.2 or higher with `pdo_mysql`, `mbstring`, `fileinfo`, `gd` or `imagick` extensions.
 * Composer 2.x
-* MySQL 8.0 or MariaDB 10.5+
+* MySQL 8.0 or MariaDB 10.5+ (e.g. via Laragon, XAMPP, or Docker)
 * Node.js 18+ and npm
 
 ---
 
-### 1. Backend Setup (`prepareme-api`)
+### Step 1: Create the Database
+Ensure your MySQL service is running, then create the database:
+```bash
+# Using PHP CLI:
+php -r "(new PDO('mysql:host=127.0.0.1;port=3306', 'root', ''))->exec('CREATE DATABASE IF NOT EXISTS prepareme_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;'); echo 'Database prepareme_db created!';"
 
-1. Open terminal in `prepareme-api`:
+# Or using MySQL CLI / GUI (HeidiSQL, phpMyAdmin):
+CREATE DATABASE prepareme_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```
+
+---
+
+### Step 2: Backend Setup (`prepareme-api`)
+
+1. Open a terminal in `prepareme-api`:
    ```bash
-   cd C:\laragon\www\prepareme.com\prepareme-api
+   cd prepareme-api
    ```
-2. Copy environment variables:
+2. Copy environment configuration:
    ```bash
    cp .env.example .env
+   # On Windows PowerShell:
+   copy .env.example .env
    ```
-3. Configure MySQL credentials in `.env`:
+3. Install PHP dependencies:
+   ```bash
+   composer install
+   ```
+4. Generate the application encryption key:
+   ```bash
+   php artisan key:generate
+   ```
+5. Verify `.env` database configuration (defaults match standard local MySQL):
    ```env
    DB_CONNECTION=mysql
    DB_HOST=127.0.0.1
@@ -113,40 +135,47 @@ prepareme.com/
    OCR_DRIVER=dev
    QUEUE_CONNECTION=database
    ```
-4. Run migrations and database seeders:
+6. Run migrations and database seeders:
    ```bash
    php artisan migrate:fresh --seed
    ```
-5. Start the backend development server:
+7. Start the backend REST API server:
    ```bash
    php artisan serve --port=8000
    ```
    *The API will be accessible at `http://127.0.0.1:8000/api/v1`.*
 
-6. In a separate terminal, start the queue worker for OCR processing:
+8. In a separate terminal, start the background queue worker for OCR processing:
    ```bash
+   cd prepareme-api
    php artisan queue:work --tries=3 --timeout=120
    ```
 
 ---
 
-### 2. Frontend Setup (`prepareme-web`)
+### Step 3: Frontend Setup (`prepareme-web`)
 
-1. Open terminal in `prepareme-web`:
+1. Open a terminal in `prepareme-web`:
    ```bash
-   cd C:\laragon\www\prepareme.com\prepareme-web
+   cd prepareme-web
    ```
-2. Install dependencies (if not already installed):
+2. Copy environment configuration:
+   ```bash
+   cp .env.example .env
+   # On Windows PowerShell:
+   copy .env.example .env
+   ```
+3. Install Node.js dependencies:
    ```bash
    npm install
    ```
-3. Start the Vite development server:
+4. Start the Vite development server:
    ```bash
    npm run dev
    ```
    *The web client will be available at `http://localhost:5173`.*
 
-4. To create an optimized production build:
+5. To create an optimized production build:
    ```bash
    npm run build
    ```

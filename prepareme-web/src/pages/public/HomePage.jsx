@@ -40,22 +40,14 @@ const HomePage = () => {
                 বাংলা, ইংরেজি, গাণিতিক যুক্তি, সাধারণ জ্ঞান ও আইসিটি সহ সকল বিষয়ের অধ্যায়ভিত্তিক স্টাডি গাইড, বিগত সালের প্রশ্নব্যাংক এবং আপনার নিজস্ব প্রশ্ন সংরক্ষণ ও বই থেকে OCR স্ক্যানিং সুবিধা।
               </p>
               <div className="d-flex flex-wrap gap-3">
-                {isAuthenticated ? (
-                  <Link to="/dashboard" className="btn btn-warning btn-lg px-4 py-3 fw-bold bangla-text shadow-sm rounded-3">
-                    <i className="bi bi-speedometer2 me-2"></i> আমার ড্যাশবোর্ডে যান
-                  </Link>
-                ) : (
-                  <>
-                    <Link to="/register" className="btn btn-warning btn-lg px-4 py-3 fw-bold bangla-text shadow-sm rounded-3">
-                      <i className="bi bi-person-plus-fill me-2"></i> বিনামূল্যে শুরু করুন
-                    </Link>
-                    <Link to="/login" className="btn btn-outline-light btn-lg px-4 py-3 bangla-text rounded-3">
-                      <i className="bi bi-box-arrow-in-right me-2"></i> লগইন করুন
-                    </Link>
-                  </>
-                )}
-                <Link to="/public-questions" className="btn btn-light btn-lg px-4 py-3 bangla-text text-primary rounded-3">
-                  <i className="bi bi-patch-question me-2"></i> প্রশ্নব্যাংক অনুশীলন
+                <Link to="/exams" className="btn btn-warning btn-lg px-4 py-3 fw-bold bangla-text shadow-sm rounded-3">
+                  <i className="bi bi-mortarboard-fill me-2"></i> সরকারি চাকরি সিলেবাস
+                </Link>
+                <Link to="/previous-questions" className="btn btn-light btn-lg px-4 py-3 bangla-text text-primary fw-bold shadow-sm rounded-3">
+                  <i className="bi bi-archive-fill me-2"></i> বিগত সালের প্রশ্নব্যাংক
+                </Link>
+                <Link to="/model-tests" className="btn btn-outline-light btn-lg px-4 py-3 bangla-text rounded-3">
+                  <i className="bi bi-stopwatch-fill me-2"></i> মডেল টেস্ট দিন
                 </Link>
               </div>
             </div>

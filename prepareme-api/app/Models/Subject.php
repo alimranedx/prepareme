@@ -52,6 +52,18 @@ class Subject extends Model
         return $query->orderBy('sort_order', 'asc')->orderBy('name', 'asc');
     }
 
+    public function chapters(): HasMany
+    {
+        return $this->hasMany(Chapter::class)->orderBy('sort_order', 'asc');
+    }
+
+    public function publishedChapters(): HasMany
+    {
+        return $this->hasMany(Chapter::class)
+            ->where('status', ContentStatus::PUBLISHED)
+            ->orderBy('sort_order', 'asc');
+    }
+
     public function topics(): HasMany
     {
         return $this->hasMany(Topic::class);

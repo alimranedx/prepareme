@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from 'react';
+import { useSearchParams, Link } from 'react-router-dom';
 import apiClient from '../../api/client';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import EmptyState from '../../components/common/EmptyState';
 import Pagination from '../../components/common/Pagination';
 
 const PublicQuestionsPage = () => {
+  const [searchParams] = useSearchParams();
+  const initialTopicId = searchParams.get('topic_id') || '';
+  const initialStudyGuideId = searchParams.get('study_guide_id') || '';
+  const initialSubjectId = searchParams.get('subject_id') || '';
+
   const [questions, setQuestions] = useState([]);
   const [subjects, setSubjects] = useState([]);
   const [topics, setTopics] = useState([]);
@@ -13,13 +19,28 @@ const PublicQuestionsPage = () => {
 
   // Filters
   const [filters, setFilters] = useState({
-    subject_id: '',
-    topic_id: '',
+    subject_id: initialSubjectId,
+    topic_id: initialTopicId,
+    study_guide_id: initialStudyGuideId,
     difficulty: '',
     question_type: '',
     search: '',
     page: 1,
   });
+
+  // Sync filters if URL search params change
+  useEffect(() => {
+    const topicIdFromUrl = searchParams.get('topic_id') || '';
+    const subjectIdFromUrl = searchParams.get('subject_id') || '';
+    const studyGuideIdFromUrl = searchParams.get('study_guide_id') || '';
+    setFilters((prev) => ({
+      ...prev,
+      topic_id: topicIdFromUrl,
+      subject_id: subjectIdFromUrl,
+      study_guide_id: studyGuideIdFromUrl,
+      page: 1,
+    }));
+  }, [searchParams]);
 
   // Track interactive MCQ answers selected by the user in this session
   const [userSelections, setUserSelections] = useState({});
@@ -63,6 +84,7 @@ const PublicQuestionsPage = () => {
         const params = new URLSearchParams();
         if (filters.subject_id) params.append('subject_id', filters.subject_id);
         if (filters.topic_id) params.append('topic_id', filters.topic_id);
+        if (filters.study_guide_id) params.append('study_guide_id', filters.study_guide_id);
         if (filters.difficulty) params.append('difficulty', filters.difficulty);
         if (filters.question_type) params.append('question_type', filters.question_type);
         if (filters.search) params.append('search', filters.search);
@@ -80,6 +102,16 @@ const PublicQuestionsPage = () => {
 
     fetchQuestions();
   }, [filters]);
+
+  // Auto-detect subject if user navigated with topic_id directly
+  useEffect(() => {
+    if (!filters.subject_id && questions.length > 0 && questions[0]?.subject_id) {
+      setFilters((prev) => ({
+        ...prev,
+        subject_id: String(questions[0].subject_id),
+      }));
+    }
+  }, [questions, filters.subject_id]);
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
@@ -125,7 +157,66 @@ const PublicQuestionsPage = () => {
   };
 
   return (
-    <div className="container py-5">
+    <div className="container py-4 py-lg-5">
+      {/* Dynamic Accessible Breadcrumb */}
+      {(() => {
+        const selectedSubject = subjects.find((s) => String(s.id) === String(filters.subject_id));
+        const selectedTopic = topics.find((t) => String(t.id) === String(filters.topic_id));
+        return (
+          <nav aria-label="breadcrumb" className="mb-4">
+            <ol className="breadcrumb bangla-text small bg-white p-3 rounded-4 shadow-sm border mb-0 flex-wrap align-items-center">
+              <li className="breadcrumb-item">
+                <Link to="/" className="text-decoration-none text-muted d-inline-flex align-items-center">
+                  <i className="bi bi-house-door me-1"></i>হোম
+                </Link>
+              </li>
+              <li className="breadcrumb-item">
+                <Link to="/subjects" className="text-decoration-none text-muted">
+                  বিষয়সমূহ
+                </Link>
+              </li>
+              {selectedSubject ? (
+                <>
+                  <li className="breadcrumb-item">
+                    <Link
+                      to={`/subjects/${selectedSubject.slug}`}
+                      className="text-decoration-none text-primary"
+                      title={`${selectedSubject.name} এর সিলেবাসে যান`}
+                    >
+                      {selectedSubject.name}
+                    </Link>
+                  </li>
+                  {selectedTopic ? (
+                    <>
+                      <li className="breadcrumb-item">
+                        <Link
+                          to={`/subjects/${selectedSubject.slug}#topic-${selectedTopic.id}`}
+                          className="text-decoration-none text-muted"
+                          title={`${selectedTopic.name} টপিকে ফিরে যান`}
+                        >
+                          {selectedTopic.name}
+                        </Link>
+                      </li>
+                      <li className="breadcrumb-item active fw-bold text-dark" aria-current="page">
+                        প্রশ্নব্যাংক
+                      </li>
+                    </>
+                  ) : (
+                    <li className="breadcrumb-item active fw-bold text-dark" aria-current="page">
+                      প্রশ্নব্যাংক
+                    </li>
+                  )}
+                </>
+              ) : (
+                <li className="breadcrumb-item active fw-bold text-dark" aria-current="page">
+                  পাবলিক প্রশ্নব্যাংক
+                </li>
+              )}
+            </ol>
+          </nav>
+        );
+      })()}
+
       {/* Header */}
       <div className="text-center mb-5">
         <span className="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill fw-bold bangla-text mb-2">

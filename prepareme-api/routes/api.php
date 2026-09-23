@@ -9,6 +9,9 @@ use App\Http\Controllers\Api\V1\Admin\AdminTopicController;
 use App\Http\Controllers\Api\V1\Admin\AdminUserController;
 use App\Http\Controllers\Api\V1\Auth\AuthController;
 use App\Http\Controllers\Api\V1\OCR\OcrController;
+use App\Http\Controllers\Api\V1\Study\ChapterController;
+use App\Http\Controllers\Api\V1\Study\ExamController;
+use App\Http\Controllers\Api\V1\Study\ModelTestController;
 use App\Http\Controllers\Api\V1\Study\PublicQuestionController;
 use App\Http\Controllers\Api\V1\Study\StudyGuideController;
 use App\Http\Controllers\Api\V1\Study\SubjectController;
@@ -37,15 +40,38 @@ Route::prefix('v1')->group(function () {
     });
 
     // ==========================================
-    // Public Educational Browsing
+    // Public Educational Browsing & Study Hub
     // ==========================================
     Route::get('subjects', [SubjectController::class, 'index']);
+    Route::get('subjects/{subject}/chapters', [ChapterController::class, 'index']);
     Route::get('subjects/{subject}/topics', [SubjectController::class, 'topics']);
+    Route::get('chapters/{chapter}', [ChapterController::class, 'show']);
+    Route::get('chapters/{chapter}/topics', [ChapterController::class, 'topics']);
     Route::get('topics/{topic}', [TopicController::class, 'show']);
+    Route::get('topics/{topic}/previous-questions', [TopicController::class, 'previousQuestions']);
+
     Route::get('study-guides', [StudyGuideController::class, 'index']);
     Route::get('study-guides/{studyGuide}', [StudyGuideController::class, 'show']);
+
+    // Question Bank & Previous Years Exam Archive
     Route::get('public-questions', [PublicQuestionController::class, 'index']);
     Route::get('public-questions/{question}', [PublicQuestionController::class, 'show']);
+    Route::get('previous-questions', [PublicQuestionController::class, 'previousQuestions']);
+    Route::get('question-sources', [PublicQuestionController::class, 'sources']);
+    Route::get('question-sources/{source}', [PublicQuestionController::class, 'showSource']);
+
+    // Government Job Exams & Syllabuses
+    Route::get('exams', [ExamController::class, 'index']);
+    Route::get('exams/{exam}', [ExamController::class, 'show']);
+    Route::get('exams/{exam}/syllabus', [ExamController::class, 'syllabus']);
+
+    // Model Tests & Exam Simulator
+    Route::get('model-tests', [ModelTestController::class, 'index']);
+    Route::get('model-tests/{modelTest}', [ModelTestController::class, 'show']);
+    Route::post('model-tests/{modelTest}/start', [ModelTestController::class, 'start']);
+    Route::post('test-attempts/{attempt}/submit', [ModelTestController::class, 'submit']);
+    Route::get('test-attempts/{attempt}/result', [ModelTestController::class, 'result']);
+    Route::get('test-attempts/{attempt}/mistakes', [ModelTestController::class, 'mistakes']);
 
     // ==========================================
     // Authenticated User Endpoints
