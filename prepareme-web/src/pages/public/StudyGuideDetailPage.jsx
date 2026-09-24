@@ -283,7 +283,7 @@ const StudyGuideDetailPage = () => {
             <li className="breadcrumb-item">
               <Link
                 to={`/subjects/${guide.topic.subject.slug}`}
-                className="text-decoration-none text-primary"
+                className="text-decoration-none text-primary fw-semibold"
                 title={`${guide.topic.subject.name} এর মূল সিলেবাসে যান`}
               >
                 {guide.topic.subject.name}
@@ -293,7 +293,11 @@ const StudyGuideDetailPage = () => {
           {guide.topic?.chapter && (
             <li className="breadcrumb-item">
               <Link
-                to={`/subjects/${guide.topic.subject?.slug || 'bangla'}?chapter=${guide.topic.chapter.id}`}
+                to={
+                  guide.topic.subject?.slug
+                    ? `/subjects/${guide.topic.subject.slug}?chapter=${guide.topic.chapter.id}`
+                    : `/subjects?chapter=${guide.topic.chapter.id}`
+                }
                 className="text-decoration-none text-primary"
                 title={`${guide.topic.chapter.name} খণ্ডে ফিরে যান`}
               >
@@ -304,7 +308,11 @@ const StudyGuideDetailPage = () => {
           {guide.topic && (
             <li className="breadcrumb-item">
               <Link
-                to={`/subjects/${guide.topic.subject?.slug || 'bangla'}?chapter=${guide.topic.chapter_id || ''}#topic-${guide.topic.id}`}
+                to={
+                  guide.topic.subject?.slug
+                    ? `/subjects/${guide.topic.subject.slug}${guide.topic.chapter_id ? `?chapter=${guide.topic.chapter_id}` : ''}#topic-${guide.topic.id}`
+                    : '/subjects'
+                }
                 className="text-decoration-none text-secondary"
                 title={`${guide.topic.name} টপিকে ফিরে যান`}
               >
@@ -502,18 +510,26 @@ const StudyGuideDetailPage = () => {
             )}
 
             {/* Interactive MCQ Self-Check Footer */}
-            <div className="mt-5 p-4 rounded-4 bg-light border text-center bangla-text">
-              <i className="bi bi-check2-circle fs-2 text-primary d-block mb-2"></i>
-              <h5 className="fw-bold text-dark mb-2">পড়া শেষ? নিজেকে যাচাই করুন!</h5>
-              <p className="text-muted small mb-3">
-                এই অধ্যায়ের ওপর বিগত বিসিএস, ব্যাংক ও প্রাইমারি নিয়োগ পরীক্ষার প্রশ্নাবলী দিয়ে এখনই স্ব-মূল্যায়ন টেস্ট দিন।
+            <div className="mt-5 p-4 rounded-4 bg-light border text-center bangla-text shadow-sm">
+              <i className="bi bi-award-fill fs-2 text-primary d-block mb-2"></i>
+              <h5 className="fw-bold text-dark mb-2">পড়া শেষ? এখন বিগত প্রশ্ন সমাধান ও অনুশীলন করুন!</h5>
+              <p className="text-muted small mb-3 mx-auto" style={{ maxWidth: '560px' }}>
+                এই টপিকটি আয়ত্ত করার পর বিগত ১০-৪৬তম বিসিএস, ব্যাংক AD ও অন্যান্য নিয়োগ পরীক্ষার প্রশ্নব্যাংক সমাধান করে নিজেকে যাচাই করুন।
               </p>
-              <Link
-                to={`/public-questions?study_guide_id=${guide.id}`}
-                className="btn btn-primary rounded-pill px-4 bangla-text fw-semibold"
-              >
-                <i className="bi bi-patch-question me-1"></i>এই অধ্যায়ের MCQ অনুশীলন করুন
-              </Link>
+              <div className="d-flex gap-3 justify-content-center flex-wrap">
+                <Link
+                  to={`/public-questions?topic_id=${guide.topic_id}`}
+                  className="btn btn-primary rounded-pill px-4 py-2 bangla-text fw-semibold shadow-sm"
+                >
+                  <i className="bi bi-patch-question-fill me-1"></i>১. বিগত প্রশ্ন সমাধান করুন
+                </Link>
+                <Link
+                  to={`/public-questions?topic_id=${guide.topic_id}&question_type=mcq`}
+                  className="btn btn-outline-success rounded-pill px-4 py-2 bangla-text fw-semibold"
+                >
+                  <i className="bi bi-stopwatch me-1"></i>২. আত্মমূল্যায়ন কুইজ টেস্ট
+                </Link>
+              </div>
             </div>
 
             {/* Sequential Lesson Navigation (Previous / Next) */}

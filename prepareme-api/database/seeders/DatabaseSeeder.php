@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             ExamAndModelTestSeeder::class,
             BanglaMasterComprehensiveCurriculumSeeder::class,
             EnglishMasterComprehensiveCurriculumSeeder::class,
+            BcsPreliminaryCompleteSyllabusSeeder::class,
             PersonalNotebookSeeder::class,
         ]);
     }

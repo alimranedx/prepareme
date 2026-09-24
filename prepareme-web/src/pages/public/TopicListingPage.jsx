@@ -484,24 +484,38 @@ const TopicListingPage = () => {
                         </div>
                       </div>
 
-                      {/* Header Actions & Stats */}
+                      {/* 3-Step Learning Workflow Actions */}
                       <div className="d-flex align-items-center gap-2 flex-wrap">
+                        {topicGuides.length > 0 ? (
+                          <Link
+                            to={`/study-guides/${topicGuides[0].slug || topicGuides[0].id}`}
+                            className="btn btn-primary btn-sm rounded-pill px-3 bangla-text fw-semibold shadow-sm"
+                            title="১ম ধাপ: এই টপিকের সম্পূর্ণ স্টাডি গাইড পড়ুন"
+                          >
+                            <i className="bi bi-book-half me-1"></i>১. স্টাডি গাইড পড়ুন
+                          </Link>
+                        ) : (
+                          <span className="badge bg-light text-muted border bangla-text px-3 py-2 rounded-pill">
+                            <i className="bi bi-journal-text me-1"></i>গাইড সংকলন চলছে
+                          </span>
+                        )}
+
                         <button
                           type="button"
-                          className={`btn btn-sm rounded-pill px-3 bangla-text ${isQuestionsOpen ? 'btn-warning text-dark fw-bold' : 'btn-outline-warning text-dark'}`}
+                          className={`btn btn-sm rounded-pill px-3 bangla-text fw-semibold ${isQuestionsOpen ? 'btn-warning text-dark fw-bold' : 'btn-outline-primary'}`}
                           onClick={() => handleToggleTopicQuestions(topic.id)}
-                          title="এই টপিক থেকে বিগত ১০ বছরে আসা প্রশ্নাবলি দেখুন"
+                          title="২য় ধাপ: এই টপিক থেকে বিগত বছরের বিসিএস ও পিএসসি প্রশ্নাবলি দেখুন"
                         >
-                          <i className="bi bi-clock-history me-1"></i>
-                          বিগত প্রশ্ন {isQuestionsOpen ? 'লুকান' : 'দেখুন'}
+                          <i className="bi bi-patch-question-fill me-1"></i>
+                          ২. বিগত প্রশ্ন {isQuestionsOpen ? 'লুকান' : 'সমাধান'}
                         </button>
 
                         <Link
                           to={`/public-questions?topic_id=${topic.id}`}
-                          className="btn btn-outline-primary btn-sm rounded-pill px-3 bangla-text"
-                          title="এই অধ্যায়ের সকল MCQ অনুশীলন করুন"
+                          className="btn btn-outline-success btn-sm rounded-pill px-3 bangla-text fw-semibold"
+                          title="৩য় ধাপ: এই টপিকের ওপর কুইজ টেস্ট দিয়ে নিজেকে যাচাই করুন"
                         >
-                          <i className="bi bi-patch-question me-1"></i>প্রশ্নব্যাংক
+                          <i className="bi bi-stopwatch me-1"></i>৩. কুইজ টেস্ট
                         </Link>
                       </div>
                     </div>
@@ -600,45 +614,67 @@ const TopicListingPage = () => {
                         <div className="row g-3">
                           {subtopics.map((subtopic) => {
                             const subGuides = subtopic.study_guides || [];
+                            const parentGuide = topicGuides[0];
+                            const guideToUse = subGuides.length > 0 ? subGuides[0] : parentGuide;
+
                             return (
                               <div className="col-md-6 col-lg-4" key={subtopic.id}>
-                                <div className="p-3 rounded-4 bg-light border h-100 d-flex flex-column">
+                                <div className="p-3 rounded-4 bg-light border h-100 d-flex flex-column hover-lift">
                                   <div className="d-flex align-items-center justify-content-between mb-2">
-                                    <h6 className="fw-bold bangla-text text-dark mb-0">
-                                      <i className="bi bi-chevron-right text-primary me-1 small"></i>
+                                    <h6 className="fw-bold bangla-text text-dark mb-0 d-flex align-items-center gap-1">
+                                      <i className="bi bi-journal-bookmark text-primary me-1"></i>
                                       {subtopic.name}
                                     </h6>
-                                    {subGuides.length > 0 && (
-                                      <span className="badge bg-white text-secondary border small">
-                                        {subGuides.length} গাইড
+                                    {subtopic.is_high_yield && (
+                                      <span className="badge-high-yield small py-0.5">
+                                        <i className="bi bi-star-fill me-1"></i>৩-স্টার
                                       </span>
                                     )}
                                   </div>
-                                  <p className="text-muted small bangla-text flex-grow-1 mb-3">
-                                    {subtopic.description || 'পরীক্ষার জন্য প্রয়োজনীয় বিস্তারিত আলোচনা।'}
+                                  <p className="text-muted small bangla-text flex-grow-1 mb-3 line-clamp-2" style={{ lineHeight: '1.6' }}>
+                                    {subtopic.description || `${subtopic.name} সংক্রান্ত বিসিএস ও পিএসসি পরীক্ষার প্রয়োজনীয় আলোচনা ও প্রশ্নোত্তর।`}
                                   </p>
 
-                                  {subGuides.length > 0 ? (
-                                    <div className="d-flex flex-column gap-2 mt-auto">
-                                      {subGuides.map((guide) => (
-                                        <Link
-                                          key={guide.id}
-                                          to={`/study-guides/${guide.slug || guide.id}`}
-                                          className="btn btn-white btn-sm border text-start bangla-text rounded-3 shadow-none d-flex align-items-center justify-content-between text-dark fw-semibold"
-                                        >
-                                          <span className="text-truncate">
-                                            <i className="bi bi-journal-richtext text-primary me-2"></i>
-                                            {guide.title}
-                                          </span>
-                                          <i className="bi bi-arrow-right text-muted small ms-2"></i>
-                                        </Link>
-                                      ))}
+                                  {/* 3-Step Interactive Action Row for Subtopics */}
+                                  <div className="d-flex flex-column gap-2 mt-auto pt-2 border-top">
+                                    {guideToUse ? (
+                                      <Link
+                                        to={`/study-guides/${guideToUse.slug || guideToUse.id}`}
+                                        className="btn btn-primary btn-sm bangla-text rounded-3 fw-semibold d-flex align-items-center justify-content-between shadow-xs"
+                                        title={`${subtopic.name} এর স্টাডি গাইড পড়ুন`}
+                                      >
+                                        <span><i className="bi bi-book-half me-1"></i>১. স্টাডি গাইড পড়ুন</span>
+                                        <i className="bi bi-arrow-right small"></i>
+                                      </Link>
+                                    ) : (
+                                      <Link
+                                        to={`/public-questions?topic_id=${subtopic.id}`}
+                                        className="btn btn-primary btn-sm bangla-text rounded-3 fw-semibold d-flex align-items-center justify-content-between shadow-xs"
+                                        title={`${subtopic.name} এর মূল বিষয়বস্তু ও প্রশ্নোত্তর পড়ুন`}
+                                      >
+                                        <span><i className="bi bi-book-half me-1"></i>১. স্টাডি গাইড পড়ুন</span>
+                                        <i className="bi bi-arrow-right small"></i>
+                                      </Link>
+                                    )}
+
+                                    <div className="d-flex gap-2">
+                                      <Link
+                                        to={`/public-questions?topic_id=${subtopic.id}`}
+                                        className="btn btn-light border btn-sm bangla-text rounded-3 flex-grow-1 text-dark fw-semibold text-nowrap small d-flex align-items-center justify-content-center"
+                                        title="এই টপিকের বিগত প্রশ্ন সমাধান করুন"
+                                      >
+                                        <i className="bi bi-patch-question-fill text-warning me-1"></i>২. বিগত প্রশ্ন
+                                      </Link>
+
+                                      <Link
+                                        to={`/public-questions?topic_id=${subtopic.id}&question_type=mcq`}
+                                        className="btn btn-light border btn-sm bangla-text rounded-3 flex-grow-1 text-success fw-semibold text-nowrap small d-flex align-items-center justify-content-center"
+                                        title="এই টপিকের কুইজ টেস্ট দিন"
+                                      >
+                                        <i className="bi bi-stopwatch text-success me-1"></i>৩. কুইজ টেস্ট
+                                      </Link>
                                     </div>
-                                  ) : (
-                                    <div className="text-muted small bangla-text mt-auto fst-italic">
-                                      নোট সংকলন চলছে...
-                                    </div>
-                                  )}
+                                  </div>
                                 </div>
                               </div>
                             );

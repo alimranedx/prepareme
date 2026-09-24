@@ -20,6 +20,8 @@ class TopicResource extends JsonResource
             'is_high_yield' => (bool) $this->is_high_yield,
             'status' => $this->status?->value ?? (string) $this->status,
             'sort_order' => $this->sort_order,
+            'subject' => new SubjectResource($this->whenLoaded('subject')),
+            'chapter' => new ChapterResource($this->whenLoaded('chapter')),
             'children' => TopicResource::collection(
                 $this->relationLoaded('publishedChildren')
                     ? $this->publishedChildren

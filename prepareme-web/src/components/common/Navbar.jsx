@@ -12,17 +12,17 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm py-2">
+    <nav className="navbar navbar-expand-lg navbar-dark custom-navbar sticky-top">
       <div className="container">
         <Link className="navbar-brand fw-bold d-flex align-items-center gap-2" to="/">
-          <span className="badge bg-primary text-white p-2 rounded-3">
+          <div className="navbar-brand-icon">
             <i className="bi bi-book-half fs-5"></i>
-          </span>
-          <span>PrepareMe<span className="text-primary">.com</span></span>
+          </div>
+          <span className="fs-5 tracking-tight text-white">PrepareMe<span className="text-gradient-emerald">.com</span></span>
         </Link>
 
         <button
-          className="navbar-toggler"
+          className="navbar-toggler border-0"
           type="button"
           data-bs-toggle="collapse"
           data-bs-target="#mainNavbar"
@@ -34,10 +34,10 @@ const Navbar = () => {
         </button>
 
         <div className="collapse navbar-collapse" id="mainNavbar">
-          <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+          <ul className="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-3">
             <li className="nav-item">
               <NavLink className="nav-link bangla-text" to="/subjects">
-                <i className="bi bi-book-half me-1"></i> বিষয় ও অধ্যায়
+                <i className="bi bi-book me-1"></i> বিষয় ও অধ্যায়
               </NavLink>
             </li>
             <li className="nav-item">
@@ -89,7 +89,7 @@ const Navbar = () => {
             {isAuthenticated ? (
               <div className="dropdown">
                 <button
-                  className="btn btn-outline-light dropdown-toggle d-flex align-items-center gap-2 rounded-pill px-3 py-1"
+                  className="btn btn-hero-glass dropdown-toggle d-flex align-items-center gap-2 rounded-pill px-3 py-1 text-white"
                   type="button"
                   id="userDropdown"
                   data-bs-toggle="dropdown"
@@ -132,10 +132,10 @@ const Navbar = () => {
               </div>
             ) : (
               <div className="d-flex gap-2">
-                <Link to="/login" className="btn btn-outline-light btn-sm bangla-text px-3 rounded-pill">
+                <Link to="/login" className="btn btn-hero-glass btn-sm bangla-text px-3 rounded-pill">
                   লগইন
                 </Link>
-                <Link to="/register" className="btn btn-primary btn-sm bangla-text px-3 rounded-pill">
+                <Link to="/register" className="btn btn-hero-primary btn-sm bangla-text px-4 rounded-pill">
                   নিবন্ধন করুন
                 </Link>
               </div>

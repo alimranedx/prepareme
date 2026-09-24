@@ -742,11 +742,11 @@ const PublicQuestionManagementPage = () => {
 
       {/* Delete Confirmation Modal */}
       <ConfirmModal
-        show={!!deleteId}
+        isOpen={!!deleteId}
         title="প্রশ্ন মুছে ফেলার নিশ্চিতকরণ"
         message="আপনি কি নিশ্চিতভাবে এই প্রশ্নটি মুছে ফেলতে চান? এই অ্যাকশনটি অপরিবর্তনীয়।"
-        confirmLabel="হ্যাঁ, মুছে ফেলুন"
-        cancelLabel="বাতিল"
+        confirmText="হ্যাঁ, মুছে ফেলুন"
+        cancelText="বাতিল"
         confirmVariant="danger"
         onConfirm={handleDeleteConfirm}
         onCancel={() => setDeleteId(null)}
